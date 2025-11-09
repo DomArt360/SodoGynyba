@@ -67,8 +67,12 @@ public class EnemySpawner : MonoBehaviour
     {
         isSpawning = false;
         timeSinceLastSpawn = 0f;
+
+        LevelManager.main.WaveCompleted();
+
         currentWave++;
         StartCoroutine(StartWave());
+
     }
     private void SpawnEnemy()
     {

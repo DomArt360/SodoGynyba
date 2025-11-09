@@ -27,6 +27,8 @@ public class EnemyMovement : MonoBehaviour
 
             if(pathIndex == LevelManager.main.path.Length)
             {
+                Debug.Log("Enemy reached endpoint - reducing life!");
+                LevelManager.main.EnemyReachedEndpoint();
                 EnemySpawner.onEnemyDestroy.Invoke();
                 Destroy(gameObject);
                 return;

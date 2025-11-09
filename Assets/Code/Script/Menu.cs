@@ -5,6 +5,8 @@ public class Menu : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] TextMeshProUGUI currencyUI;
+    [SerializeField] private TextMeshProUGUI livesUI;
+    [SerializeField] private TextMeshProUGUI waveUI;
     [SerializeField] Animator anim;
 
     private bool isMenuOpen = true;
@@ -17,7 +19,14 @@ public class Menu : MonoBehaviour
 
     private void OnGUI()
     {
-        currencyUI.text = LevelManager.main.currency.ToString();
+        if (currencyUI != null)
+            currencyUI.text = "Money: " + LevelManager.main.currency;
+
+        if (livesUI != null)
+            livesUI.text = "Lives: " + LevelManager.main.playerLives;
+
+        if (waveUI != null)
+            waveUI.text = "Wave: " + LevelManager.main.wavesDefeated;
     }
 
     public void SetSelected()

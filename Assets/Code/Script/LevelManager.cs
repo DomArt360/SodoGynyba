@@ -8,6 +8,10 @@ public class LevelManager : MonoBehaviour
     public Transform[] path;
 
     public int currency;
+    public int playerLives = 2;
+    public int wavesDefeated = 0;
+
+    public GameObject gameOverPanel;
     private void Awake()
     {
         main = this;
@@ -32,5 +36,38 @@ public class LevelManager : MonoBehaviour
             Debug.Log("You do not have enough money!!!");
             return false;
         }
+    }
+
+    public void EnemyReachedEndpoint()
+    {
+        playerLives--;
+        Debug.Log("Lives left: " + playerLives);
+
+        if (playerLives <= 0)
+        {
+            GameOver();
+        }
+    }
+
+    public void WaveCompleted()
+    {
+        wavesDefeated++;
+        Debug.Log("Wave Completed! Total waves defeated: " + wavesDefeated);
+    }
+
+    private void GameOver()
+    {
+        Debug.Log("Game Over! You lost all your lives.");
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+            Time.timeScale = 0f; 
+        }
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
     }
 }
