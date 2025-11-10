@@ -8,10 +8,12 @@ public class LevelManager : MonoBehaviour
     public Transform[] path;
 
     public int currency;
-    public int playerLives = 2;
+    public int playerLives = 3;
     public int wavesDefeated = 0;
+    public int maxWaves = 10;
 
     public GameObject gameOverPanel;
+    public GameObject victoryPanel;
     private void Awake()
     {
         main = this;
@@ -53,6 +55,10 @@ public class LevelManager : MonoBehaviour
     {
         wavesDefeated++;
         Debug.Log("Wave Completed! Total waves defeated: " + wavesDefeated);
+        if (wavesDefeated >= maxWaves)
+        {
+            Victory();
+        }
     }
 
     private void GameOver()
@@ -64,6 +70,16 @@ public class LevelManager : MonoBehaviour
             Time.timeScale = 0f; 
         }
     }
+    private void Victory()
+    {
+        Debug.Log("You defended The Garden!");
+        if (victoryPanel != null)
+        {
+            victoryPanel.SetActive(true);
+            Time.timeScale = 0f; 
+        }
+    }
+
 
     public void RestartGame()
     {

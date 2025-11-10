@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7530134220430417633}
   - component: {fileID: 8409129619988622824}
   m_Layer: 0
-  m_Name: Turret
+  m_Name: Heavy Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,11 +50,11 @@ MonoBehaviour:
   enemyMask:
     serializedVersion: 2
     m_Bits: 64
-  bulletprefab: {fileID: 6971806761213139833, guid: cb36c8b3872637e4ca82413973974d98, type: 3}
+  bulletprefab: {fileID: 6971806761213139833, guid: 04fd51cbed638814eb22e264953b9ab2, type: 3}
   firingPoint: {fileID: 2472621449808153044}
   targetingRange: 3
-  rotationSpeed: 100
-  bps: 1
+  rotationSpeed: 200
+  bps: 0.5
 --- !u!1 &1621852701480541655
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +135,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -539579915749326718, guid: 6ce8084c0140a91409855b47c900049a, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.495708, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -225,7 +225,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 1
   m_Sprite: {fileID: 8195469170884960449, guid: 6ce8084c0140a91409855b47c900049a, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0.98742133, b: 0.8265384, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
