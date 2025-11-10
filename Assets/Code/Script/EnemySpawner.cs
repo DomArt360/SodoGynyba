@@ -79,10 +79,24 @@ public class EnemySpawner : MonoBehaviour
     }
     private void SpawnEnemy()
     {
-        int index = Random.Range(0, enemyPrefabs.Length);
+        int maxEnemyIndex = GetMaxEnemyIndexForWave();
+        int index = Random.Range(0, maxEnemyIndex + 1);
         GameObject prefabToSpawn = enemyPrefabs[index];
+
         Instantiate(prefabToSpawn, LevelManager.main.startPoint.position, Quaternion.identity);
     }
+    private int GetMaxEnemyIndexForWave()
+    {
+        if (currentWave <=1 )
+            return 1;  
+        else if (currentWave == 2)
+            return 2;  
+        else if (currentWave == 3)
+            return 3;  
+        else 
+            return 4;
+    }
+
     private int EnemiesPerWave()
     {
         return Mathf.RoundToInt(baseEnemies * Mathf.Pow(currentWave, difficultyScalingFactor));

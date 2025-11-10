@@ -26,7 +26,7 @@ public class Menu : MonoBehaviour
             livesUI.text = "Lives: " + LevelManager.main.playerLives;
 
         if (waveUI != null)
-            waveUI.text = "Wave: " + LevelManager.main.wavesDefeated;
+            waveUI.text = "Waves completed: " + LevelManager.main.wavesDefeated;
     }
 
     public void SetSelected()
