@@ -10074,6 +10074,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   startPoint: {fileID: 148582550}
   path:
+  - {fileID: 148582550}
   - {fileID: 414704613}
   - {fileID: 1045184944}
   - {fileID: 1514573958}
@@ -10128,6 +10129,7 @@ MonoBehaviour:
   - {fileID: 4057812628393053483, guid: 93fe68f7207505a4b993af7196364cf2, type: 3}
   - {fileID: 4057812628393053483, guid: 9d8490c0d957b304c9634ad76c4d6385, type: 3}
   - {fileID: 4057812628393053483, guid: 5ea36be68287b8c469d4ebb7683d622c, type: 3}
+  - {fileID: 4057812628393053483, guid: ff3896415c9fd8a458052568e49a4fb2, type: 3}
   baseEnemies: 8
   enemiesPerSecond: 0.5
   timeBetweenWaves: 5
@@ -10150,7 +10152,7 @@ MonoBehaviour:
     cost: 50
     prefab: {fileID: 650007318344816683, guid: 34b9b66951697d14abe717779277f7d0, type: 3}
   - name: Sniper Tower
-    cost: 150
+    cost: 50
     prefab: {fileID: 650007318344816683, guid: 97ff68e5616c53845854525c28ea9c16, type: 3}
   - name: Heavy Tower
     cost: 250

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour
 
     public GameObject gameOverPanel;
     public GameObject victoryPanel;
+
     private void Awake()
     {
         main = this;
@@ -23,13 +24,16 @@ public class LevelManager : MonoBehaviour
     {
         currency = 100;
     }
-    public void IncreaseCurrency( int amount)
+
+    public void IncreaseCurrency(int amount)
     {
         currency += amount;
     }
-    public bool SpendCurrency( int amount )
+
+    public bool SpendCurrency(int amount)
     {
-        if ( amount <= currency ) {
+        if (amount <= currency)
+        {
             currency -= amount;
             return true;
         }
@@ -55,6 +59,7 @@ public class LevelManager : MonoBehaviour
     {
         wavesDefeated++;
         Debug.Log("Wave Completed! Total waves defeated: " + wavesDefeated);
+
         if (wavesDefeated >= maxWaves)
         {
             Victory();
@@ -64,22 +69,24 @@ public class LevelManager : MonoBehaviour
     private void GameOver()
     {
         Debug.Log("Game Over! You lost all your lives.");
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
-            Time.timeScale = 0f; 
-        }
-    }
-    private void Victory()
-    {
-        Debug.Log("You defended The Garden!");
-        if (victoryPanel != null)
-        {
-            victoryPanel.SetActive(true);
-            Time.timeScale = 0f; 
+            Time.timeScale = 0f;
         }
     }
 
+    private void Victory()
+    {
+        Debug.Log("You defended The Garden!");
+
+        if (victoryPanel != null)
+        {
+            victoryPanel.SetActive(true);
+            Time.timeScale = 0f;
+        }
+    }
 
     public void RestartGame()
     {

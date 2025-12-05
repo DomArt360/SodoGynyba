@@ -1,12 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
-
 using System.Collections;
 using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
-
     [Header("References")]
     [SerializeField] private GameObject[] enemyPrefabs;
 
@@ -31,6 +29,7 @@ public class EnemySpawner : MonoBehaviour
     {
         onEnemyDestroy.AddListener(EnemyDestroyed);
     }
+
     private void Start()
     {
         StartCoroutine(StartWave());
@@ -42,22 +41,25 @@ public class EnemySpawner : MonoBehaviour
 
         timeSinceLastSpawn += Time.deltaTime;
 
-        if(timeSinceLastSpawn >= (1f / eps) && enemiesLeftToSpawn > 0) 
+        if (timeSinceLastSpawn >= (1f / eps) && enemiesLeftToSpawn > 0)
         {
             SpawnEnemy();
             enemiesLeftToSpawn--;
             enemiesAlive++;
             timeSinceLastSpawn = 0f;
         }
-        if(enemiesAlive == 0 && enemiesLeftToSpawn == 0)
+
+        if (enemiesAlive == 0 && enemiesLeftToSpawn == 0)
         {
             EndWave();
         }
     }
+
     private void EnemyDestroyed()
     {
         enemiesAlive--;
     }
+
     private IEnumerator StartWave()
     {
         yield return new WaitForSeconds(timeBetweenWaves);
@@ -66,43 +68,42 @@ public class EnemySpawner : MonoBehaviour
         enemiesLeftToSpawn = EnemiesPerWave();
         eps = EnemiesPerSecond();
     }
+
     private void EndWave()
     {
         isSpawning = false;
         timeSinceLastSpawn = 0f;
 
         LevelManager.main.WaveCompleted();
-
         currentWave++;
-        StartCoroutine(StartWave());
 
+        StartCoroutine(StartWave());
     }
+
     private void SpawnEnemy()
     {
         int maxEnemyIndex = GetMaxEnemyIndexForWave();
         int index = Random.Range(0, maxEnemyIndex + 1);
-        GameObject prefabToSpawn = enemyPrefabs[index];
 
+        GameObject prefabToSpawn = enemyPrefabs[index];
         Instantiate(prefabToSpawn, LevelManager.main.startPoint.position, Quaternion.identity);
     }
+
     private int GetMaxEnemyIndexForWave()
     {
-        if (currentWave <=1 )
-            return 1;  
-        else if (currentWave == 2)
-            return 2;  
-        else if (currentWave == 3)
-            return 3;  
-        else 
-            return 4;
+        if (currentWave <= 1) return 1;
+        else if (currentWave == 2) return 2;
+        else if (currentWave == 3) return 3;
+        else return 4;
     }
 
     private int EnemiesPerWave()
     {
         return Mathf.RoundToInt(baseEnemies * Mathf.Pow(currentWave, difficultyScalingFactor));
     }
+
     private float EnemiesPerSecond()
     {
-        return Mathf.Clamp(enemiesPerSecond * Mathf.Pow(currentWave, difficultyScalingFactor), 0f , enemiesPerSecondCap);
+        return Mathf.Clamp(enemiesPerSecond * Mathf.Pow(currentWave, difficultyScalingFactor), 0f, enemiesPerSecondCap);
     }
 }

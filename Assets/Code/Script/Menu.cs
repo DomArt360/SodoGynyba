@@ -1,13 +1,13 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 
 public class Menu : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] TextMeshProUGUI currencyUI;
+    [SerializeField] private TextMeshProUGUI currencyUI;
     [SerializeField] private TextMeshProUGUI livesUI;
     [SerializeField] private TextMeshProUGUI waveUI;
-    [SerializeField] Animator anim;
+    [SerializeField] private Animator anim;
 
     private bool isMenuOpen = true;
 
@@ -17,7 +17,7 @@ public class Menu : MonoBehaviour
         anim.SetBool("MenuOpen", isMenuOpen);
     }
 
-    private void OnGUI()
+    private void Update()
     {
         if (currencyUI != null)
             currencyUI.text = "Money: " + LevelManager.main.currency;
@@ -31,6 +31,6 @@ public class Menu : MonoBehaviour
 
     public void SetSelected()
     {
-
+        // Reserved for button selection logic if needed
     }
 }

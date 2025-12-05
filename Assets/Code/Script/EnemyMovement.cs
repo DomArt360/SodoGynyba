@@ -1,10 +1,7 @@
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.PlayerLoop;
+﻿using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
 
@@ -16,16 +13,28 @@ public class EnemyMovement : MonoBehaviour
 
     private void Start()
     {
+        if (LevelManager.main == null || LevelManager.main.path == null || LevelManager.main.path.Length == 0)
+        {
+            Debug.LogError("LevelManager or path not initialized!");
+            enabled = false;  // Disable this script to avoid errors
+            return;
+        }
+
+        pathIndex = 0;
         target = LevelManager.main.path[pathIndex];
+        transform.position = target.position;  // Optionally start at first path point
     }
 
     private void Update()
     {
-        if(Vector2.Distance(target.position, transform.position) <= 0.1f)
+        if (target == null) return;
+
+        // Check distance to current target
+        if (Vector2.Distance(transform.position, target.position) <= 0.1f)
         {
             pathIndex++;
 
-            if(pathIndex == LevelManager.main.path.Length)
+            if (LevelManager.main.path == null || pathIndex >= LevelManager.main.path.Length)
             {
                 Debug.Log("Enemy reached endpoint - reducing life!");
                 LevelManager.main.EnemyReachedEndpoint();
@@ -38,16 +47,13 @@ public class EnemyMovement : MonoBehaviour
                 target = LevelManager.main.path[pathIndex];
             }
         }
-
     }
 
-    [System.Obsolete]
     private void FixedUpdate()
     {
+        if (target == null) return;
+
         Vector2 direction = (target.position - transform.position).normalized;
-
-        rb.velocity = direction * moveSpeed;
+        rb.linearVelocity = direction * moveSpeed;
     }
-
-
 }

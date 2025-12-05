@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Health : MonoBehaviour
 {
@@ -11,7 +11,8 @@ public class Health : MonoBehaviour
     public void TakeDamage(int damage)
     {
         hitPoint -= damage;
-        if(hitPoint <= 0 && !isDestroyed)
+
+        if (hitPoint <= 0 && !isDestroyed)
         {
             EnemySpawner.onEnemyDestroy.Invoke();
             LevelManager.main.IncreaseCurrency(currencyWorth);

@@ -20,12 +20,12 @@ public class Turret : MonoBehaviour
 
     private void Update()
     {
-        if(target == null)
+        if (target == null)
         {
             FindTarget();
             return;
         }
-        
+
         RotateTowardsTarget();
 
         if (!CheckTargetIsInRange())
@@ -35,26 +35,27 @@ public class Turret : MonoBehaviour
         else
         {
             timeUntilFire += Time.deltaTime;
-            if(timeUntilFire >= 1f/bps )
+
+            if (timeUntilFire >= 1f / bps)
             {
                 Shoot();
                 timeUntilFire = 0f;
-
             }
         }
     }
+
     private void Shoot()
     {
         GameObject bulletObj = Instantiate(bulletprefab, firingPoint.position, Quaternion.identity);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
         bulletScript.SetTarget(target);
     }
+
     private void FindTarget()
     {
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position,targetingRange,(Vector2) transform.position,
-            0f, enemyMask);
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, targetingRange, (Vector2)transform.position, 0f, enemyMask);
 
-        if(hits.Length > 0 )
+        if (hits.Length > 0)
         {
             target = hits[0].transform;
         }
@@ -64,11 +65,12 @@ public class Turret : MonoBehaviour
     {
         return Vector2.Distance(target.position, transform.position) <= targetingRange;
     }
+
     private void RotateTowardsTarget()
     {
-        float angle = Mathf.Atan2(target.position.y - transform.position.y, target.position.x - transform.position.x)*Mathf.Rad2Deg - 90f;
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0f,0f,angle));
-        turretRotationPoint.rotation = Quaternion.RotateTowards(turretRotationPoint.rotation, targetRotation, rotationSpeed * Time.deltaTime); 
+        float angle = Mathf.Atan2(target.position.y - transform.position.y, target.position.x - transform.position.x) * Mathf.Rad2Deg - 90f;
+        Quaternion targetRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+        turretRotationPoint.rotation = Quaternion.RotateTowards(turretRotationPoint.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     private void OnDrawGizmosSelected()
