@@ -1,6 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
+// UnityEditor nereikalingas, jei nenaudojamas Handles.DrawWireDisc ne redaktoriaus režime
+#if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine.UIElements;
+#endif
 
 public class Turret : MonoBehaviour
 {
@@ -20,13 +22,13 @@ public class Turret : MonoBehaviour
 
     private void Update()
     {
+        if (!LevelManager.main.IsGameActive()) return;
+
         if (target == null)
         {
             FindTarget();
             return;
         }
-
-        RotateTowardsTarget();
 
         if (!CheckTargetIsInRange())
         {
@@ -34,27 +36,36 @@ public class Turret : MonoBehaviour
         }
         else
         {
-            timeUntilFire += Time.deltaTime;
+            RotateTowardsTarget();
+            TryShoot();
+        }
+    }
 
-            if (timeUntilFire >= 1f / bps)
-            {
-                Shoot();
-                timeUntilFire = 0f;
-            }
+    // Švarus kodas: atskirta šaudymo logika
+    private void TryShoot()
+    {
+        timeUntilFire += Time.deltaTime;
+        if (timeUntilFire >= 1f / bps)
+        {
+            Shoot();
+            timeUntilFire = 0f;
         }
     }
 
     private void Shoot()
     {
         GameObject bulletObj = Instantiate(bulletprefab, firingPoint.position, Quaternion.identity);
-        Bullet bulletScript = bulletObj.GetComponent<Bullet>();
-        bulletScript.SetTarget(target);
+
+        // Patikrinimas, kad užtikrinti saugumą
+        if (bulletObj.TryGetComponent(out Bullet bulletScript))
+        {
+            bulletScript.SetTarget(target);
+        }
     }
 
     private void FindTarget()
     {
         RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, targetingRange, (Vector2)transform.position, 0f, enemyMask);
-
         if (hits.Length > 0)
         {
             target = hits[0].transform;
@@ -63,7 +74,7 @@ public class Turret : MonoBehaviour
 
     private bool CheckTargetIsInRange()
     {
-        return Vector2.Distance(target.position, transform.position) <= targetingRange;
+        return target != null && Vector2.Distance(target.position, transform.position) <= targetingRange;
     }
 
     private void RotateTowardsTarget()
@@ -73,9 +84,13 @@ public class Turret : MonoBehaviour
         turretRotationPoint.rotation = Quaternion.RotateTowards(turretRotationPoint.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
+    // Nereikalingas UnityEditor importas, jei šis blokas pašalinamas build'inant
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         Handles.color = Color.cyan;
+        // Naudojama Graphics klasė vietoj Handles, jei norima matyti žaidimo režime
         Handles.DrawWireDisc(transform.position, transform.forward, targetingRange);
     }
+#endif
 }

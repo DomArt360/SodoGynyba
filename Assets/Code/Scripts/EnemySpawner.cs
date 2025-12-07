@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
-using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -13,20 +12,20 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float enemiesPerSecond = 0.5f;
     [SerializeField] private float timeBetweenWaves = 5f;
     [SerializeField] private float difficultyScalingFactor = 0.75f;
-    [SerializeField] private float enemiesPerSecondCap = 15f;
 
     [Header("Events")]
+    // Observer Pattern: Publisher
     public static UnityEvent onEnemyDestroy = new UnityEvent();
 
     private int currentWave = 1;
     private float timeSinceLastSpawn;
     private int enemiesAlive;
     private int enemiesLeftToSpawn;
-    private float eps;
-    private bool isSpawning = false;
+    private float eps; // Enemies Per Second
 
     private void Awake()
     {
+        // Observer Pattern: Subscriber
         onEnemyDestroy.AddListener(EnemyDestroyed);
     }
 
@@ -37,21 +36,28 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        if (!isSpawning) return;
+        if (!LevelManager.main.IsGameActive()) return;
+        if (!isSpawning()) return;
 
         timeSinceLastSpawn += Time.deltaTime;
 
-        if (timeSinceLastSpawn >= (1f / eps) && enemiesLeftToSpawn > 0)
-        {
-            SpawnEnemy();
-            enemiesLeftToSpawn--;
-            enemiesAlive++;
-            timeSinceLastSpawn = 0f;
-        }
+        // Švarus kodas: atskirta spawn'inimo logika
+        TrySpawnEnemy();
 
         if (enemiesAlive == 0 && enemiesLeftToSpawn == 0)
         {
             EndWave();
+        }
+    }
+
+    private bool isSpawning() => enemiesLeftToSpawn > 0;
+
+    private void TrySpawnEnemy()
+    {
+        if (timeSinceLastSpawn >= (1f / eps) && enemiesLeftToSpawn > 0)
+        {
+            SpawnEnemy();
+            timeSinceLastSpawn = 0f;
         }
     }
 
@@ -63,20 +69,15 @@ public class EnemySpawner : MonoBehaviour
     private IEnumerator StartWave()
     {
         yield return new WaitForSeconds(timeBetweenWaves);
-
-        isSpawning = true;
         enemiesLeftToSpawn = EnemiesPerWave();
         eps = EnemiesPerSecond();
     }
 
     private void EndWave()
     {
-        isSpawning = false;
         timeSinceLastSpawn = 0f;
-
         LevelManager.main.WaveCompleted();
         currentWave++;
-
         StartCoroutine(StartWave());
     }
 
@@ -84,13 +85,22 @@ public class EnemySpawner : MonoBehaviour
     {
         int maxEnemyIndex = GetMaxEnemyIndexForWave();
         int index = Random.Range(0, maxEnemyIndex + 1);
-
         GameObject prefabToSpawn = enemyPrefabs[index];
-        Instantiate(prefabToSpawn, LevelManager.main.startPoint.position, Quaternion.identity);
+
+        // Factory Method naudojimas
+        GameObject newEnemy = EnemyFactory.CreateEnemy(prefabToSpawn, LevelManager.main.startPoint);
+
+        if (newEnemy != null)
+        {
+            enemiesLeftToSpawn--;
+            enemiesAlive++;
+        }
     }
 
+    // Švarus kodas: metodai mažesni ir atsakingi už vieną dalyką
     private int GetMaxEnemyIndexForWave()
     {
+        // Galima refaktorizuoti į ScriptableObject ateityje
         if (currentWave <= 1) return 1;
         else if (currentWave == 2) return 2;
         else if (currentWave == 3) return 3;
@@ -104,6 +114,6 @@ public class EnemySpawner : MonoBehaviour
 
     private float EnemiesPerSecond()
     {
-        return Mathf.Clamp(enemiesPerSecond * Mathf.Pow(currentWave, difficultyScalingFactor), 0f, enemiesPerSecondCap);
+        return Mathf.Clamp(enemiesPerSecond * Mathf.Pow(currentWave, difficultyScalingFactor), GameConstants.MIN_EPS, GameConstants.MAX_EPS);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour
+// Interfeiso realizacija
+public class EnemyMovement : MonoBehaviour, IMovement
 {
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
@@ -11,36 +12,39 @@ public class EnemyMovement : MonoBehaviour
     private Transform target;
     private int pathIndex = 0;
 
+    // Inkapsuliacija: getteris
+    public float MoveSpeed => moveSpeed;
+
     private void Start()
     {
         if (LevelManager.main == null || LevelManager.main.path == null || LevelManager.main.path.Length == 0)
         {
             Debug.LogError("LevelManager or path not initialized!");
-            enabled = false;  // Disable this script to avoid errors
+            enabled = false;
             return;
         }
-
         pathIndex = 0;
         target = LevelManager.main.path[pathIndex];
-        transform.position = target.position;  // Optionally start at first path point
+        transform.position = target.position;
     }
 
     private void Update()
     {
         if (target == null) return;
+        CheckIfTargetReached();
+    }
 
-        // Check distance to current target
-        if (Vector2.Distance(transform.position, target.position) <= 0.1f)
+    // Švarus kodas: didelė logika padalinta į mažesnį metodą
+    private void CheckIfTargetReached()
+    {
+        if (Vector2.Distance(transform.position, target.position) <= GameConstants.ENEMY_REACHED_DISTANCE)
         {
             pathIndex++;
-
-            if (LevelManager.main.path == null || pathIndex >= LevelManager.main.path.Length)
+            if (pathIndex >= LevelManager.main.path.Length)
             {
-                Debug.Log("Enemy reached endpoint - reducing life!");
                 LevelManager.main.EnemyReachedEndpoint();
                 EnemySpawner.onEnemyDestroy.Invoke();
                 Destroy(gameObject);
-                return;
             }
             else
             {
@@ -51,8 +55,13 @@ public class EnemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (target == null) return;
+        FixedUpdateMovement(target);
+    }
 
+    // Interfeiso metodo realizacija
+    public void FixedUpdateMovement(Transform target)
+    {
+        if (target == null) return;
         Vector2 direction = (target.position - transform.position).normalized;
         rb.linearVelocity = direction * moveSpeed;
     }

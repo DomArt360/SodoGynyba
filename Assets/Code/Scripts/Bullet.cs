@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
@@ -11,6 +11,7 @@ public class Bullet : MonoBehaviour
 
     private Transform target;
 
+    // Inkapsuliacija: setteris
     public void SetTarget(Transform _target)
     {
         target = _target;
@@ -19,14 +20,18 @@ public class Bullet : MonoBehaviour
     private void FixedUpdate()
     {
         if (!target) return;
-
         Vector2 direction = (target.position - transform.position).normalized;
         rb.linearVelocity = direction * bulletSpeed;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        other.gameObject.GetComponent<Health>().TakeDamage(bulletDamage);
-        Destroy(gameObject);
+        // Polimorfizmas: Kviečia TakeDamage() per bazinį Damageable tipą, 
+        // kuris realiai įvykdomas per EnemyHealth.
+        if (other.gameObject.TryGetComponent(out Damageable damageable))
+        {
+            damageable.TakeDamage(bulletDamage);
+            Destroy(gameObject);
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Plot : MonoBehaviour
 {
@@ -31,13 +30,29 @@ public class Plot : MonoBehaviour
 
         Tower towerToBuild = BuildManager.main.GetSelectedTower();
 
-        if (towerToBuild.cost > LevelManager.main.currency)
+        if (CanBuildTower(towerToBuild))
+        {
+            BuildTower(towerToBuild);
+        }
+    }
+
+    // Švarus kodas: logika padalinta
+    private bool CanBuildTower(Tower towerToBuild)
+    {
+        if (towerToBuild.cost > LevelManager.main.GetCurrency())
         {
             Debug.Log("You can't afford this tower");
-            return;
+            return false;
         }
+        return true;
+    }
 
-        LevelManager.main.SpendCurrency(towerToBuild.cost);
-        tower = Instantiate(towerToBuild.prefab, transform.position, Quaternion.identity);
+    // Švarus kodas: logika padalinta
+    private void BuildTower(Tower towerToBuild)
+    {
+        if (LevelManager.main.SpendCurrency(towerToBuild.cost))
+        {
+            tower = Instantiate(towerToBuild.prefab, transform.position, Quaternion.identity);
+        }
     }
 }
