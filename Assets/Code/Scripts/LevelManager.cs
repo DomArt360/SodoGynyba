@@ -26,7 +26,6 @@ public class LevelManager : MonoBehaviour
         _currency = GameConstants.START_CURRENCY;
     }
 
-    // Inkapsuliacija: getteris
     public int GetCurrency() => _currency;
     public bool IsGameActive() => !isGameOver;
 

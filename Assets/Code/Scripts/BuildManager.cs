@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class BuildManager : MonoBehaviour
 {
-    // Singleton paliktas dėl Unity scenos valdymo
+    
     public static BuildManager main;
 
     [Header("References")]
@@ -26,7 +26,6 @@ public class BuildManager : MonoBehaviour
         InitializeButtons();
     }
 
-    // Švarus kodas: atskirta Start() logika
     private void InitializeButtons()
     {
         for (int i = 0; i < towerButtons.Length; i++)
@@ -37,13 +36,11 @@ public class BuildManager : MonoBehaviour
             towerButtons[selectedTower].image.color = selectedColor;
     }
 
-    // Inkapsuliacija: getteris
     public Tower GetSelectedTower()
     {
         return towers[selectedTower];
     }
 
-    // Švarus kodas: atskirta UI atnaujinimo logika
     public void SetSelectedTower(int _selectedTower)
     {
         UpdateOldSelectionColor();

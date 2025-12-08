@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-// Factory: Atskiria objekto kūrimo logiką
 public static class EnemyFactory
 {
     public static GameObject CreateEnemy(GameObject prefab, Transform spawnPoint)

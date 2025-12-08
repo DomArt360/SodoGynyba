@@ -1,8 +1,4 @@
 ﻿using UnityEngine;
-// UnityEditor nereikalingas, jei nenaudojamas Handles.DrawWireDisc ne redaktoriaus režime
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 public class Turret : MonoBehaviour
 {
@@ -41,7 +37,6 @@ public class Turret : MonoBehaviour
         }
     }
 
-    // Švarus kodas: atskirta šaudymo logika
     private void TryShoot()
     {
         timeUntilFire += Time.deltaTime;
@@ -56,7 +51,6 @@ public class Turret : MonoBehaviour
     {
         GameObject bulletObj = Instantiate(bulletprefab, firingPoint.position, Quaternion.identity);
 
-        // Patikrinimas, kad užtikrinti saugumą
         if (bulletObj.TryGetComponent(out Bullet bulletScript))
         {
             bulletScript.SetTarget(target);
@@ -84,13 +78,4 @@ public class Turret : MonoBehaviour
         turretRotationPoint.rotation = Quaternion.RotateTowards(turretRotationPoint.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
-    // Nereikalingas UnityEditor importas, jei šis blokas pašalinamas build'inant
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
-    {
-        Handles.color = Color.cyan;
-        // Naudojama Graphics klasė vietoj Handles, jei norima matyti žaidimo režime
-        Handles.DrawWireDisc(transform.position, transform.forward, targetingRange);
-    }
-#endif
 }
